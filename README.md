@@ -1,82 +1,85 @@
 # OttLeszek
 
-Privacy-conscious, lawful civic participation app for the Hungarian context: plan, reminders, action checklist, and optional outreach — without dark patterns or manipulation.
+Magánéletedet tisztelő, részvételi emlékeztető és tervkészítő alkalmazás a magyar kontextusban. Egyszerű terv, emlékeztetők és opcionális kapcsolatfelvétel azokkal, akiket ismersz — manipuláció és sötét minták nélkül.
 
-## Repo structure
+## Funkciók
 
-- **apps/mobile** — React Native (Expo) app
-- **apps/backend** — Fastify API (Node.js, TypeScript, Prisma)
-- **packages/shared** — Shared types and constants
-- **packages/config** — Shared ESLint/TypeScript config
-- **docs** — Product framing, architecture, ADRs, roadmap, demo script
+- **Elköteleződés** — Egy kattintással jelezheted, hogy részt veszel.
+- **Terv** — Lépések megadása (pl. „Elmegyek szavazni”), checklist a főoldalon.
+- **Emlékeztetők** — Időzített emlékeztetők a fontos napokra.
+- **Kapcsolat** — Opcionális kapcsolattartók és sablonok a meghívó üzenetekhez.
+- **Adatvédelem** — Hozzájáruláskezelés, értesítési beállítások, adatexport és fiók törlés.
 
-## Prerequisites
+## Tech stack
 
-- Node.js ≥ 20
+| Réteg    | Technológia |
+| -------- | ----------- |
+| Mobile   | React Native, Expo (SDK 52), TypeScript, Expo Router |
+| Backend  | Node.js, Fastify, TypeScript, Prisma |
+| Adatbázis| SQLite (fejlesztés) / PostgreSQL (célszerű élesben) |
+
+## Előfeltételek
+
+- Node.js ≥ 20  
 - pnpm 9+
 
-## Setup
+## Gyors indulás
 
 ```bash
+# Függőségek
 pnpm install
-```
 
-### Backend
-
-```bash
+# Backend
 cd apps/backend
-cp .env.example .env   # adjust if needed
-pnpm run db:generate   # Prisma client (Phase 2: migrations)
-pnpm run dev           # http://localhost:3000
-```
+cp .env.example .env
+pnpm run db:generate
+pnpm run dev
+# → http://localhost:3000
 
-Health: `GET http://localhost:3000/health`
-
-### Mobile
-
-```bash
+# Mobile (új terminál)
 cd apps/mobile
-pnpm run dev           # Expo dev server; scan QR or press i/a for simulator
+pnpm run dev
+# → QR kód / böngésző (w) / iOS (i) / Android (a)
 ```
 
-## Scripts (from repo root)
+A backend állapota: `GET http://localhost:3000/health`
 
-| Command                | Description                                        |
-| ---------------------- | -------------------------------------------------- |
-| `pnpm run dev`         | Run mobile and backend in parallel (if configured) |
-| `pnpm run dev:mobile`  | Expo dev server                                    |
-| `pnpm run dev:backend` | Fastify dev server                                 |
-| `pnpm run typecheck`   | TypeScript check all packages                      |
-| `pnpm run lint`        | Lint all packages                                  |
-| `pnpm run format`      | Format with Prettier                               |
+## Projekt struktúra
 
-## Documentation
+```
+apps/
+  mobile/     React Native (Expo) alkalmazás
+  backend/    Fastify API, Prisma
+packages/
+  shared/     Közös típusok és konstansok
+  config/     Közös ESLint és TypeScript konfiguráció
+docs/         Architektúra, ADR-ek, roadmap, demó
+scripts/      Segédscriptek (pl. képernyőképek)
+```
 
-- [Project framing & MVP](docs/PROJECT_FRAMING.md)
-- [MVP feature matrix](docs/MVP_FEATURE_MATRIX.md)
-- [Architecture](docs/ARCHITECTURE.md)
-- [Design & UX](docs/DESIGN_UX.md)
-- [Data model](docs/DATA_MODEL.md)
-- [Privacy & security](docs/PRIVACY_SECURITY.md)
-- [Agents](docs/AGENTS.md)
-- [Rules](docs/RULES.md)
-- [Skills](docs/SKILLS.md)
+## Parancsok (repo gyökeréből)
+
+| Parancs | Leírás |
+| ------- | ------ |
+| `pnpm run dev:mobile`  | Expo dev szerver |
+| `pnpm run dev:backend`| Fastify dev szerver |
+| `pnpm run typecheck`   | TypeScript ellenőrzés |
+| `pnpm run lint`       | ESLint |
+| `pnpm run format`     | Prettier formázás |
+
+## Dokumentáció
+
+- [Projekt és MVP](docs/PROJECT_FRAMING.md)
+- [Funkciómátrix](docs/MVP_FEATURE_MATRIX.md)
+- [Architektúra](docs/ARCHITECTURE.md)
+- [Design és UX](docs/DESIGN_UX.md)
+- [Adatmodell](docs/DATA_MODEL.md)
+- [Adatvédelem és biztonság](docs/PRIVACY_SECURITY.md)
 - [Roadmap](docs/ROADMAP.md)
-- [Demo script](docs/DEMO_SCRIPT.md)
-- [**Tesztelés és demó (gyors útmutató)**](docs/TESTING_AND_DEMO.md)
-- [ADRs](docs/adr/)
+- [Demó script](docs/DEMO_SCRIPT.md)
+- [Tesztelés és demó](docs/TESTING_AND_DEMO.md)
+- [ADR-ek](docs/adr/)
 
-## MVP status
+## Licenc
 
-- [x] **Phase 1:** Monorepo, backend (Fastify, health), mobile shell (Expo, theme, onboarding shell), shared, config, docs
-- [x] **Phase 2:** Prisma schema (User, Profile, Commitment, Plan, PlanStep, Reminder, NotificationPreferences, OutreachContact, OutreachAction, ConsentRecord, AuditEvent), migrations, auth (OTP mock), all domain routes
-- [x] **Phase 3:** Onboarding (welcome, consent, login), commitment, plan builder, checklist (dashboard), reminders, API wiring
-- [x] **Phase 4:** Outreach (contacts, templates), consent center & notification prefs in Settings
-- [x] **Phase 5:** Settings (export, delete account), notification prefs UI
-- [x] **Phase 6:** Demo script, Cursor rules & skills
-
-**Cursor:** Project rules in `.cursor/rules/` (ottleszek, backend, mobile, privacy, agents). Skills in `.cursor/skills/` (mvp-scope-guard, privacy-review, backend-endpoint, screen-blueprint).
-
-## License
-
-Private / TBD.
+Privát / TBD.
