@@ -1,0 +1,27 @@
+{
+  "name": "ottleszek",
+  "version": "0.1.0",
+  "private": true,
+  "description": "OttLeszek — privacy-conscious civic participation app",
+  "scripts": {
+    "screenshots": "node scripts/capture-tutorial-screenshots.mjs",
+    "dev": "pnpm run dev:backend",
+    "dev:all": "concurrently -n backend,mobile -c blue,green \"pnpm run dev:backend\" \"pnpm run dev:mobile\"",
+    "dev:mobile": "pnpm --filter mobile dev",
+    "dev:backend": "pnpm --filter backend dev",
+    "build": "pnpm -r run build",
+    "lint": "pnpm -r run lint",
+    "typecheck": "pnpm -r run typecheck",
+    "test": "pnpm -r run test",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1",
+    "playwright": "^1.58.2",
+    "prettier": "^3.2.5"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@9.14.2"
+}

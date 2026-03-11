@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Env (never commit secrets)
+.env
+.env.local
+.env.*.local
+
+# Build
+dist/
+build/
+.expo/
+*.tsbuildinfo
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Prisma
+apps/backend/prisma/dev.db
+apps/backend/prisma/dev.db-journal
+
+# Test
+coverage/
+
+.cursor/

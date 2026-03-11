@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OttLeszek – Alkalmazás bemutató és használati útmutató</title>
+  <style>
+    body { font-family: 'Segoe UI', Calibri, sans-serif; max-width: 800px; margin: 0 auto; padding: 24px; line-height: 1.5; color: #333; }
+    h1 { font-size: 24pt; color: #1a1a2e; border-bottom: 2px solid #6c9eff; padding-bottom: 8px; }
+    h2 { font-size: 16pt; color: #1a1a2e; margin-top: 24px; }
+    h3 { font-size: 12pt; color: #252538; margin-top: 16px; }
+    p { margin: 8px 0; }
+    .icon { display: block; margin: 16px 0; max-width: 120px; }
+    ol, ul { margin: 8px 0; padding-left: 24px; }
+    li { margin: 4px 0; }
+    table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+    th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
+    th { background: #252538; color: #fff; }
+    .screenshot-placeholder { background: #f0f0f0; border: 2px dashed #6c9eff; padding: 24px; text-align: center; color: #6c6c80; margin: 12px 0; }
+    .screenshot-img { max-width: 100%; height: auto; margin: 12px 0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .tip { background: #e8f4ff; border-left: 4px solid #6c9eff; padding: 12px; margin: 12px 0; }
+    code { background: #f5f5f5; padding: 2px 6px; font-family: Consolas, monospace; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+
+<h1>OttLeszek – Alkalmazás bemutató és használati útmutató</h1>
+
+<p><img src="images/icon.png" alt="OttLeszek alkalmazás ikon" class="icon" width="120" height="120" /></p>
+
+<p><strong>OttLeszek</strong> egy magánéletet tisztelő, törvényes részvételi (pl. szavazási) emlékeztető és tervkészítő alkalmazás. Segít elköteleződni, egyszerű tervet készíteni, emlékeztetőket kapni, és opcionálisan ismerőseidet is megszólítani – manipuláció és sötét minták nélkül.</p>
+
+<hr />
+
+<h2>1. Tartalomjegyzék</h2>
+<ol>
+  <li>Mi az OttLeszek?</li>
+  <li>Előfeltételek</li>
+  <li>Backend és alkalmazás indítása</li>
+  <li>Alkalmazás használata – lépésről lépésre</li>
+  <li>Gyors tippek és hibaelhárítás</li>
+</ol>
+
+<hr />
+
+<h2>2. Mi az OttLeszek?</h2>
+<p>Az alkalmazás célja, hogy:</p>
+<ul>
+  <li>egy kattintással elköteleződj a részvétel mellett;</li>
+  <li>3–5 lépésből álló egyszerű tervet készíts (pl. „Regisztrálok”, „Elmegyek szavazni”);</li>
+  <li>emlékeztetőket állíts be (pl. holnap 9:00);</li>
+  <li>a főoldalon lásd a tervet és a checklistet, és jelöld késznek a lépéseket;</li>
+  <li>opcionálisan adj hozzá kapcsolatokat, és küldj nekik sablon üzenetet;</li>
+  <li>a Beállításokban kezeld a hozzájárulásokat, az értesítéseket, és töröld vagy exportáld az adataidat.</li>
+</ul>
+<p>Az app adatvédelmi szempontból minimalista: csak a szükséges adatokat gyűjti, és bármikor törölheted a fiókodat vagy kérheted adataid exportját.</p>
+
+<hr />
+
+<h2>3. Előfeltételek</h2>
+<ul>
+  <li><strong>Node.js</strong> 20 vagy újabb</li>
+  <li><strong>pnpm</strong> (telepítés: <code>npm install -g pnpm</code>)</li>
+  <li>Opcionális: <strong>Expo Go</strong> a telefonon, vagy iOS/Android szimulátor</li>
+</ul>
+
+<hr />
+
+<h2>4. Backend és alkalmazás indítása</h2>
+
+<h3>4.1 Backend (szerver) indítása</h3>
+<ol>
+  <li>Nyiss egy terminált, és menj a projekt <code>apps/backend</code> mappájába.</li>
+  <li>Másold a példa környezeti fájlt: <code>copy .env.example .env</code> (Windows) vagy <code>cp .env.example .env</code> (Mac/Linux).</li>
+  <li>Futtasd: <code>pnpm run db:generate</code>, majd <code>pnpm run dev</code>.</li>
+  <li>Ha minden rendben, a backend a <strong>http://localhost:3000</strong> címen fut. Böngészőben nyisd meg: <code>http://localhost:3000/health</code> – a válasznak „status”: „ok”-t kell tartalmaznia.</li>
+</ol>
+
+<h3>4.2 Mobil alkalmazás indítása</h3>
+<ol>
+  <li>Nyiss egy <strong>második</strong> terminált, és menj az <code>apps/mobile</code> mappába.</li>
+  <li>Futtasd: <code>pnpm run dev</code>.</li>
+  <li>Megjelenik egy QR kód. iOS-en: nyisd meg a Kamerát és scanneld. Androidon: nyisd meg az Expo Go appot és scanneld a QR kódot. Vagy nyomd meg az <strong>i</strong> billentyűt (iOS szimulátor) vagy az <strong>a</strong> billentyűt (Android emulátor).</li>
+</ol>
+
+<div class="tip">
+  <strong>Android emulátor vagy valódi telefon:</strong> a mobil appnak a gépedre kell csatlakoznia. Android emulátornál indítsd így: <code>set EXPO_PUBLIC_API_URL=http://10.0.2.2:3000</code> majd <code>pnpm run dev</code>. Valódi telefonnál a géped IP-címét használd (pl. <code>http://192.168.1.100:3000</code>), és mindkét eszköz legyen ugyanazon a Wi‑Fin.
+</div>
+
+<hr />
+
+<h2>5. Alkalmazás használata – lépésről lépésre</h2>
+
+<h3>5.1 Üdvözlő és adatkezelés</h3>
+<ol>
+  <li>Az app megnyitása után az <strong>üdvözlő képernyő</strong> jelenik meg, ahol röviden bemutatkozik az OttLeszek.</li>
+</ol>
+<p><img src="images/screenshot-welcome.png" alt="Üdvözlő képernyő" class="screenshot-img" /></p>
+<ol start="2">
+  <li>Kattints a <strong>Tovább</strong> gombra.</li>
+  <li>Az <strong>Adatkezelés és hozzájárulás</strong> szöveg elolvasása után kattints az <strong>Elfogadom, tovább</strong> gombra.</li>
+</ol>
+<p><img src="images/screenshot-consent.png" alt="Adatkezelés és hozzájárulás" class="screenshot-img" /></p>
+
+<h3>5.2 Belépés</h3>
+<ol>
+  <li>Add meg az e-mail címed vagy telefonszámodat (teszteléshez bármi megfelel, pl. <code>teszt@example.com</code>).</li>
+  <li>Kattints a <strong>Kód kérése</strong> gombra.</li>
+  <li>Fejlesztői módban a kód mindig: <strong>123456</strong>. Add meg, majd kattints a <strong>Belépés</strong> gombra.</li>
+</ol>
+<p><img src="images/screenshot-login.png" alt="Belépési képernyő" class="screenshot-img" /></p>
+
+<h3>5.3 Főoldal – Elköteleződés</h3>
+<ol>
+  <li>A főoldalon megjelenik az <strong>Elköteleződés</strong> blokk. Kattints a <strong>Részveszek</strong> gombra.</li>
+  <li>Ezzel rögzíted, hogy részt veszel. A sikeres rögzítés után a „✓ Elköteleződtél” üzenet jelenik meg.</li>
+</ol>
+<p><img src="images/screenshot-dashboard.png" alt="Főoldal – elköteleződés" class="screenshot-img" /></p>
+
+<h3>5.4 Terv létrehozása és lépések</h3>
+<ol>
+  <li>Válaszd a <strong>Terv</strong> fület (alsó menü).</li>
+  <li>Ha még nincs terved, kattints a <strong>Terv létrehozása</strong> gombra.</li>
+  <li>Add hozzá 3–5 lépést (pl. „Regisztrálok”, „Megnézem az időpontot”, „Elmegyek szavazni”). Minden lépésnél írd be a címet, majd kattints a <strong>Lépés hozzáadása</strong> gombra.</li>
+</ol>
+<p><img src="images/screenshot-plan.png" alt="Terv képernyő" class="screenshot-img" /></p>
+
+<h3>5.5 Emlékeztető beállítása</h3>
+<ol>
+  <li>Válaszd az <strong>Emlékeztetők</strong> fület.</li>
+  <li>Kattints az <strong>Emlékeztető hozzáadása (holnap 9:00)</strong> gombra. Egy emlékeztető holnap 9:00-ra kerül beállításra, és megjelenik a listában.</li>
+</ol>
+<p><img src="images/screenshot-reminders.png" alt="Emlékeztetők képernyő" class="screenshot-img" /></p>
+
+<h3>5.6 Checklist – lépés készre jelölése</h3>
+<ol>
+  <li>Menj vissza a <strong>Főoldal</strong>ra. Itt láthatod a tervet és a lépéseket.</li>
+  <li>Ha egy lépést megcsináltál, kattints rá – pipa jelölje meg (✓), és a szöveg átválik „kész” megjelenésre.</li>
+</ol>
+<p><img src="images/screenshot-checklist.png" alt="Checklist a főoldalon" class="screenshot-img" /></p>
+
+<h3>5.7 Kapcsolatfelvétel (opcionális)</h3>
+<ol>
+  <li>Válaszd a <strong>Kapcsolat</strong> fület.</li>
+  <li>Add meg egy ismerős nevét és elérhetőségét (e-mail vagy telefon), majd kattints a <strong>Hozzáadás</strong> gombra.</li>
+  <li>A listában megjelenik a kapcsolat. Az <strong>Emlékeztető</strong> gombbal sablon üzenetet „küldhetsz” (a rendszer rögzíti a küldést; a későbbi verzióban lehet valódi értesítés).</li>
+</ol>
+<p><img src="images/screenshot-outreach.png" alt="Kapcsolat képernyő" class="screenshot-img" /></p>
+
+<h3>5.8 Beállítások</h3>
+<ol>
+  <li>Válaszd a <strong>Beállítások</strong> fület.</li>
+  <li>Itt láthatod a hozzájárulások rövid összefoglalóját, beállíthatod az értesítéseket (push / alkalmazás belül), exportálhatod az adataidat, kijelentkezhetsz vagy törölheted a fiókodat.</li>
+</ol>
+<p><img src="images/screenshot-settings.png" alt="Beállítások képernyő" class="screenshot-img" /></p>
+
+<hr />
+
+<h2>6. Gyors tippek és hibaelhárítás</h2>
+
+<table>
+  <tr>
+    <th>Probléma</th>
+    <th>Megoldás</th>
+  </tr>
+  <tr>
+    <td>„Network request failed” az appban</td>
+    <td>Állítsd be az API címet: Android emulátornál <code>EXPO_PUBLIC_API_URL=http://10.0.2.2:3000</code>, valódi telefonnál a géped IP-címe (pl. <code>http://192.168.1.100:3000</code>).</td>
+  </tr>
+  <tr>
+    <td>Backend fut-e?</td>
+    <td>Böngészőben nyisd meg: <code>http://localhost:3000/health</code> – „status”: „ok” kell legyen.</td>
+  </tr>
+  <tr>
+    <td>Belépési kód</td>
+    <td>Fejlesztői módban mindig <strong>123456</strong>.</td>
+  </tr>
+</table>
+
+<hr />
+
+<p><em>Dokumentum: OttLeszek alkalmazás bemutató és használati útmutató. A képernyőképek helyeit a Wordben cseréld ki saját screenshotokra, ha szeretnéd.</em></p>
+
+</body>
+</html>

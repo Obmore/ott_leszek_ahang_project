@@ -1,0 +1,127 @@
+// OttLeszek — Prisma schema (MVP)
+// SQLite for dev; PostgreSQL for production (same schema).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  externalId   String    @unique // phone hash or email for lookup
+  phoneOrEmail String    // for display/delivery; hashed or masked in logs
+  pushToken    String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  profile              Profile?
+  commitments          Commitment[]
+  plans                Plan[]
+  reminders            Reminder[]
+  notificationPrefs   NotificationPreferences?
+  outreachContacts     OutreachContact[]
+  outreachActions      OutreachAction[]
+  consentRecords       ConsentRecord[]
+}
+
+model Profile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  displayName String?
+  locale      String   @default("hu")
+  updatedAt   DateTime @updatedAt
+}
+
+model Commitment {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  committedAt DateTime @default(now())
+  campaignId String?  // future use
+}
+
+model Plan {
+  id        String     @id @default(cuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String     @default("Részvételi tervem")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  steps     PlanStep[]
+}
+
+model PlanStep {
+  id          String    @id @default(cuid())
+  planId      String
+  plan        Plan      @relation(fields: [planId], references: [id], onDelete: Cascade)
+  orderIndex  Int
+  title       String
+  dueAt       DateTime?
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+model Reminder {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId    String?
+  remindAt  DateTime
+  channel   String    @default("push") // push | in_app
+  sentAt    DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model NotificationPreferences {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channelPush      Boolean  @default(true)
+  channelInApp     Boolean  @default(true)
+  quietHoursStart  String?  // "22:00"
+  quietHoursEnd    String?  // "08:00"
+  updatedAt        DateTime @updatedAt
+}
+
+model OutreachContact {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  contactValue String   // phone or email
+  createdAt    DateTime @default(now())
+  actions      OutreachAction[]
+}
+
+model OutreachAction {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contactId  String
+  contact    OutreachContact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  templateId String
+  sentAt     DateTime @default(now())
+}
+
+model ConsentRecord {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  consentType String
+  version    String
+  acceptedAt DateTime @default(now())
+  ipOrAgent  String?
+}
+
+model AuditEvent {
+  id        String   @id @default(cuid())
+  eventType String
+  userId    String?
+  payload   String?   // JSON, no PII
+  createdAt DateTime @default(now())
+}
